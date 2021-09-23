@@ -1,30 +1,28 @@
 <?php
 
-namespace Drupal\dbtng_example\Controller;
+namespace Drupal\pets_owners_storage\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\dbtng_example\DbtngExampleRepository;
+use Drupal\pets_owners_storage\PetsOwnersStorageRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controller for DBTNG Example.
- *
- * @ingroup dbtng_example
+ * Controller for pets_owners_storage.
  */
-class DbtngExampleController extends ControllerBase {
+class PetsOwnersStorageController extends ControllerBase {
 
   /**
    * The repository for our specialized queries.
    *
-   * @var \Drupal\dbtng_example\DbtngExampleRepository
+   * @var \Drupal\pets_owners_storage\PetsOwnersStorageRepository
    */
   protected $repository;
 
   /**
-   * {@inheritdoc}
+   * create DB}
    */
   public static function create(ContainerInterface $container) {
-    $controller = new static($container->get('dbtng_example.repository'));
+    $controller = new static($container->get('pets_owners_storage.repository'));
     $controller->setStringTranslation($container->get('string_translation'));
     return $controller;
   }
@@ -38,6 +36,7 @@ class DbtngExampleController extends ControllerBase {
   public function __construct(PetsOwnersStorageRepository $repository) {
     $this->repository = $repository;
   }
+
 
   /**
    * Render a list of entries in the database.
@@ -74,44 +73,7 @@ class DbtngExampleController extends ControllerBase {
     $content['#cache']['max-age'] = 0;
 
     return $content;
-  }
 
-  /**
-   * Render a filtered list of entries in the database.
-   */
-  public function entryAdvancedList() {
-    $content = [];
-
-    $content['message'] = [
-      '#markup' => $this->t('A more complex list of entries in the database. Only the entries with name = "John" and age older than 18 years are shown, the username of the person who created the entry is also shown.'),
-    ];
-
-    $headers = [
-      $this->t('Id'),
-      $this->t('Created by'),
-      $this->t('Name'),
-      $this->t('Surname'),
-      $this->t('Age'),
-    ];
-
-    $rows = [];
-
-    $entries = $this->repository->advancedLoad();
-
-    foreach ($entries as $entry) {
-      // Sanitize each entry.
-      $rows[] = array_map('Drupal\Component\Utility\Html::escape', $entry);
-    }
-    $content['table'] = [
-      '#type' => 'table',
-      '#header' => $headers,
-      '#rows' => $rows,
-      '#attributes' => ['id' => 'pets-owners-storage-list'],
-      '#empty' => $this->t('No entries available.'),
-    ];
-    // Don't cache this page.
-    $content['#cache']['max-age'] = 0;
-    return $content;
   }
 
 }

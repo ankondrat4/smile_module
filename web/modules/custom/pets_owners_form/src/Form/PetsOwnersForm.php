@@ -16,6 +16,7 @@ class PetsOwnersForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $form['#tree'] = TRUE;
     $form['description'] = [
       '#type' => 'item',
       '#markup' => $this->t('Input data about pets and owners:'),
@@ -31,7 +32,8 @@ class PetsOwnersForm extends FormBase {
     $form['gender']['active'] = [
       '#type' => 'radios',
       '#title' => $this->t('Gender'),
-      '#options' => [0 => $this->t('Male'), 1 => $this->t('Female'), 2 => $this->t('Unknown')],
+      '#options' => ['Male' => $this->t('Male'), 'Female' => $this->t('Female'), 'Unknown' => $this->t('Unknown')],
+      '#default_value' => 'Unknown',
     ];
 
     // Prefix select.
@@ -66,6 +68,7 @@ class PetsOwnersForm extends FormBase {
     $form['parents']['m_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Mother`s name'),
+      '#tree' => TRUE,
     ];
 
 
@@ -80,11 +83,10 @@ class PetsOwnersForm extends FormBase {
     $num_names = $form_state->get('num_names');
     // We have to ensure that there is at least one name field.
     if ($num_names === NULL) {
-      $name_field = $form_state->set('num_names', 1);
       $num_names = 1;
     }
 
-    $form['#tree'] = TRUE;
+    //$form['#tree'] = TRUE;
     $form['names_fieldset'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Names(s) of your pet(s)'),
@@ -179,14 +181,47 @@ class PetsOwnersForm extends FormBase {
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       $form_state->setErrorByName('email', $this->t('Invalid email format'));
-      $emailErr = "Invalid email format";
     }
+
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Message where submitted.
+
     $values = $form_state->getValues();
-    $this->messenger()->addMessage($this->t('Thank you'));
+    $parents = $form_state->getValue('parents');
+    $f_name = $parents['f_name'];
+    $m_name = $parents['m_name'];
+    $somepets = $values["names_fieldset"]["name"];
+    if (isset($somepets[0])) $somepets1 = $somepets[0];
+    else $somepets1 ='';
+    if (isset($somepets[1])) $somepets2 = $somepets[1];
+    else $somepets2 ='';
+    $genders = $form_state->getValue('gender');
+    $gender = $genders['active'];
+
+    // Message where submitted.
+    $this->messenger()->addMessage($this->t('Thank you '.$gender));
+    /*
+     *  Insert some example data into our schema pets_owners_storage.
+     */
+    $entry =
+      [
+        'name' => $values['name'],
+        'prefix' => $values['prefix'],
+        'gender' => $gender,
+        'age' => $values['age'],
+        'fathersname' => $f_name,
+        'mothersname' => $m_name,
+        'somepets1' => $somepets1,
+        'somepets2' => $somepets2,
+        'email' => $values['email'],
+      ];
+
+    $connection = \Drupal::database();
+    //foreach ($entries as $entry) {
+      $connection->insert('pets_owners_storage')->fields($entry)->execute();
+    //}
+
   }
 
 

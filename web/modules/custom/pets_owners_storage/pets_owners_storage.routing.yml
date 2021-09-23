@@ -1,0 +1,15 @@
+pets_owners_storage.main:
+  path: '/pets_owners_storage'
+  defaults:
+    _title: 'List from DB'
+    _controller: '\Drupal\pets_owners_storage\Controller\PetsOwnersStorageController::entryList'
+  requirements:
+    _permission: 'access content'
+
+pets_owners_storage.delete:
+  path: '/pets_owners_storage/delete/{id}'
+  defaults:
+    _title: 'Delete item from DB'
+    _controller: '\Drupal\pets_owners_storage\Controller\PetsOwnersStorageController::deleteItem'
+  requirements:
+    _permission: 'access content'
