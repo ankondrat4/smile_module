@@ -186,7 +186,6 @@ class PetsOwnersForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     $values = $form_state->getValues();
     $parents = $form_state->getValue('parents');
     $f_name = $parents['f_name'];
@@ -198,6 +197,7 @@ class PetsOwnersForm extends FormBase {
     else $somepets2 ='';
     $genders = $form_state->getValue('gender');
     $gender = $genders['active'];
+
 
     // Message where submitted.
     $this->messenger()->addMessage($this->t('Thank you '.$gender));

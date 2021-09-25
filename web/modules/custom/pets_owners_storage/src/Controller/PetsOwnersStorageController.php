@@ -7,6 +7,8 @@ use Drupal\pets_owners_storage\PetsOwnersStorageRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 
 /**
  * Controller for pets_owners_storage.
@@ -66,10 +68,16 @@ class PetsOwnersStorageController extends ControllerBase {
 
     $entries = $this->repository->load();
 
+    $options = array(
+      'class' => 'use-ajax',
+      'data-dialog-type' => 'modal',
+      'data-dialog-options' => '{"width":700, "dialogClass":"ui-dialog--example"}',
+    );
     foreach ($entries as $value) {
-      $delete = Url::fromUserInput('/pets_owners_storage/delete/'.$value->id);
+      //$delete = Url::fromUserInput('/pets_owners_storage/delete/'.$value->id);
       $edit = Url::fromUserInput('/pets_owners_form'.$value->id);
-      $rows[]=[
+      $id = $value->id;
+      $rows[] = [
         $value->id,
         $value->name,
         $value->gender,
@@ -80,7 +88,9 @@ class PetsOwnersStorageController extends ControllerBase {
         $value->somepets1,
         $value->somepets2,
         $value->email,
-        'Delete'=>Link::fromTextAndUrl('Delete', $delete),
+        //'Delete'=>$this->t('<a href="/pets_owners_storage/modal_form_delete/" class="use-ajax" data-dialog-type="modal"}>Delete</a>'),
+        'Delete'=>$this->t('<a href="/pets_owners_storage/modal_form_delete/'.$id.'" class="use-ajax" data-dialog-type="modal"}>Delete</a>'),
+        //'Delete'=>Link::fromTextAndUrl('Delete', $delete),
         'Edit'=>Link::fromTextAndUrl('Edit', $edit)];
     }
 
@@ -97,11 +107,18 @@ class PetsOwnersStorageController extends ControllerBase {
   }
 
   /**
-   * Delete item from BD.
+   * Delete item from BD without Module Form
    */
   public function deleteItem(int $id) {
-    $this->repository->delete($id);
-    return $this->entryList();
+    $select = $this->repository->select($id);
+    $data = $select->fetchField();
+    if ($data != false) {
+      $this->repository->delete($id);
+      return $this->entryList();
+    }
+    else return [
+      '#markup' => '<p>' . $this->t('404 not found') . '</p>',
+    ];
   }
 
 }

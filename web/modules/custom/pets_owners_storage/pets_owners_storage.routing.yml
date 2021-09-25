@@ -13,3 +13,11 @@ pets_owners_storage.delete:
     _controller: '\Drupal\pets_owners_storage\Controller\PetsOwnersStorageController::deleteItem'
   requirements:
     _permission: 'access content'
+
+pets_owners_storage.modal_form_delete:
+  path: '/pets_owners_storage/modal_form_delete/{id}'
+  defaults:
+    _form: '\Drupal\pets_owners_storage\Form\ModalFormDelete'
+    _title: 'Delete item'
+  requirements:
+    _permission: 'access content'

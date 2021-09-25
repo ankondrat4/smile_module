@@ -43,6 +43,7 @@ function pets_owners_storage_schema() {
     'fields' => [
       'id' => [
         'type' => 'serial',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'Primary Key: Unique record ID.',
       ],

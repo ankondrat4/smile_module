@@ -127,6 +127,14 @@ class PetsOwnersStorageRepository {
 
   }
 
+  public function select(int $id) {
+       // SELECT * FROM {dbtng_example} WHERE uid = 0 AND name = 'John'
+    $select = $this->connection->select('pets_owners_storage')
+      ->fields('pets_owners_storage')
+      ->condition('id', $id)
+      ->execute();
+    return $select;
+  }
   /**
    * Read from the database using a filter array.
    *
