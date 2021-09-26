@@ -3,9 +3,11 @@
 namespace Drupal\pets_owners_storage\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -13,39 +15,52 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ModalFormDelete extends FormBase {
 
-  public static function create(ContainerInterface $container) {
-    // Create a new form object and inject its services.
-    $form = new static();
-    $form->setRequestStack($container->get('request_stack'));
-    $form->setStringTranslation($container->get('string_translation'));
-    $form->setMessenger($container->get('messenger'));
-    return $form;
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'form_pets_owners_storage_modal_form';
   }
 
   /**
-   * Helper method so we can have consistent dialog options.
-   * @return string[]  An array of jQuery UI elements to pass on to our dialog form.
+   * Form constructor.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string|null $id
+   *   Record ID to delete.
+   *
+   * @return array
+   *   The form structure.
    */
-  protected static function getDataDialogOptions() {
-    return [
-      'width' => '50%',
-    ];
-  }
+  public function buildForm(array $form, FormStateInterface $form_state, string $id = NULL) {
+    // Prevent form building if ID hasn't found in DB.
+    $query = \Drupal::database()
+      ->select('pets_owners_storage')
+      ->fields('pets_owners_storage')
+      ->condition('id', $id)
+      ->execute();
 
-  public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
+    if (empty($query->fetchField())) {
+      throw new NotFoundHttpException();
+    }
+
     // Add the core AJAX library.
-    $form['#attached']['library'][] = 'core/drupal.ajax';
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
 
+    // Define generic form ID for errors handling.
+    $form['#prefix'] = '<div id="pets_owners_modal_delete">';
+    $form['#suffix'] = '</div>';
+
+    // Description.
     $form['description'] = [
       '#type' => 'item',
       '#markup' => $this->t('You are really want delete record with id -> '.$id.'?'),
     ];
 
-    //id item for delete
+    // ID item for delete.
     $form['id'] = [
       '#type' => 'hidden',
       '#value' => $id,
@@ -60,17 +75,21 @@ class ModalFormDelete extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Yes'),
+      '#attributes' => [
+        'class' => [
+          'use-ajax',
+        ],
+      ],
+      '#ajax' => [
+        'callback' => [$this, 'submitModalFormAjax'],
+        'event' => 'click',
+      ],
     ];
 
     // Add a cancel button=No that handles the submission of the form.
     $form['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => $this->t('No'),
-      //'#attributes' => array('onClick' => 'history.go(-2); return true;'),
-      //'#submit' => array('post_owners_storage_form_cancel'),
-      /*'#attributes' => [
-        'onclick' => 'this.dialog.close();',
-      ],*/
       '#attributes' => [
         'class' => [
           'use-ajax',
@@ -80,56 +99,75 @@ class ModalFormDelete extends FormBase {
         'callback' => [$this, 'closeModalForm'],
         'event' => 'click',
       ],
-      /*'#attributes' => [
-        'onclick' => 'this.dialog.reset(); return false;',
-      ],*/
     ];
 
     return $form;
   }
+
   /**
-   * Custom cancel button callback.
+   * Delete AJAX handler.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   Ajax response.
    */
-public function post_owners_storage_form_cancel($form, $form_state) {
-    $form_state->setRedirect('pets_owners_storage.main');
+  public function submitModalFormAjax(array $form, FormStateInterface $form_state): AjaxResponse
+  {
+    $response = new AjaxResponse();
+
+    // If there are any form errors, re-display the form.
+    if ($form_state->hasAnyErrors()) {
+      $response->addCommand(new ReplaceCommand('#pets_owners_modal_delete', $form));
+    }
+    else {
+      // Handle delete action.
+      $this->delete($form_state->getValue('id'));
+      //Close the modal.
+      $command = new CloseModalDialogCommand();
+      $response->addCommand($command);
+      $url = Url::fromRoute('pets_owners_storage.main')->toString();
+      $response->addCommand(new \Drupal\Core\Ajax\RedirectCommand($url));
+    }
+    return $response;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->delete($form_state->getValue('id'));
-    $form_state->setRedirect('pets_owners_storage.main');
   }
 
   /**
-   * for close button
+   * Close modal form handler.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   Ajax response.
    */
-  public function closeModalForm() {
+  public function closeModalForm(): AjaxResponse
+  {
     $command = new CloseModalDialogCommand();
     $response = new AjaxResponse();
     $response->addCommand($command);
     return $response;
   }
 
-  /*
-   * delete record from BD
+  /**
+   * Delete record by ID.
+   *
+   * @param string $id
+   *   Record ID to delete.
    */
-  public function delete($id) {
-    $query = \Drupal::database();
-    $select = $query->select('pets_owners_storage')
-    ->fields('pets_owners_storage')
-    ->condition('id', $id)
-    ->execute();
-    $data = $select->fetchField();
-    if ($data != false) {
-      $query->delete('pets_owners_storage')
+  public function delete(string $id) {
+    \Drupal::database()
+      ->delete('pets_owners_storage')
       ->condition('id', $id)
       ->execute();
-      $text = 'Record id = ' . $id . ' was deleted from database.';
-      \Drupal::messenger()->addMessage($text);
-    }
-    else {
-      // page no found - 404
-      throw new NotFoundHttpException();
-    }
+    $text = 'Record id = ' . $id . ' was deleted from database.';
+    \Drupal::messenger()->addMessage($text);
   }
 
 }

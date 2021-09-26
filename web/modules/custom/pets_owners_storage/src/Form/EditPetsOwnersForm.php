@@ -1,19 +1,30 @@
 <?php
 
-namespace Drupal\pets_owners_form\Form;
+namespace Drupal\pets_owners_storage\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\Url;
 
 /**
- * Implements pets_owners_form controller.
+ * Implements pets_owners_form controller for edit data.
  */
-class PetsOwnersForm extends FormBase {
+class EditPetsOwnersForm extends FormBase {
+
+  public function getFormId() {
+    return 'edit_pets_owners_storage';
+  }
 
   /**
    * buildForm with content
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
+
+    //validate correct id of record for edit
+    $records = $this->select($id);
+
+    //form inputs
     $form['#tree'] = TRUE;
     $form['description'] = [
       '#type' => 'item',
@@ -69,12 +80,14 @@ class PetsOwnersForm extends FormBase {
       '#tree' => TRUE,
     ];
 
+    //Checkbox "Have you some pets?"
     $form['somepets'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Have you some pets?'),
     );
 
-    ///Start Ajax Form for names pets
+    /*Start Ajax Form for names pets
+     */
     // Gather the number of names in the form already.
     $num_names = $form_state->get('num_names');
     // We have to ensure that there is at least one name field.
@@ -104,7 +117,6 @@ class PetsOwnersForm extends FormBase {
     $form['names_fieldset']['actions'] = [
       '#type' => 'actions',
     ];
-
     $form['names_fieldset']['actions']['add_name'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add one more'),
@@ -114,7 +126,6 @@ class PetsOwnersForm extends FormBase {
         'wrapper' => 'names-fieldset-wrapper',
       ],
     ];
-
     // If there is more than one name, add the remove button.
     if ($num_names > 1) {
       $form['names_fieldset']['actions']['remove_name'] = [
@@ -127,7 +138,8 @@ class PetsOwnersForm extends FormBase {
         ],
       ];
     }
-    ///End Ajax Form for names pets
+    /*End Ajax Form for names pets
+     */
 
     // Email
     $form['email'] = [
@@ -135,29 +147,38 @@ class PetsOwnersForm extends FormBase {
       '#title' => $this->t('Email'),
     ];
 
-    // Add a submit button that handles the submission of the form.
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Submit'),
-      '#description' => $this->t('Submit, #type = submit'),
+    //put data in form fields
+    $form['name']['#default_value'] = $records['name'];
+    $form['prefix']['#default_value'] = $records['prefix'];
+    $form['gender']['#default_value'] = $records['gender'];
+    $form['age']['#default_value'] = $records['age'];
+    $form['parents']['f_name']['#default_value'] = $records['fathersname'];
+    $form['parents']['m_name']['#default_value'] = $records['mothersname'];
+    $form['names_fieldset']['name'][0] ['#default_value'] = $records['somepets1'];
+    $form['names_fieldset']['name'][1] ['#default_value'] = $records['somepets2'];
+    $form['email']['#default_value'] = $records['email'];
+    $form_state->set('id', $id);
+
+    //Add buttons
+    $form['actions'] = [
+      '#type' => 'actions',
     ];
 
-    // Add a reset button that handles the submission of the form.
-    $form['actions']['reset'] = [
-      '#type' => 'button',
-      '#button_type' => 'reset',
-      '#value' => $this->t('Reset'),
-      '#description' => $this->t('Submit, #type = button, #button_type = reset, #attributes = this.form.reset();return false'),
-      '#attributes' => [
-        'onclick' => 'this.form.reset(); return false;',
-      ],
+    // Add a update button that handles the submission of the form.
+    $form['actions']['update'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Update'),
+      '#submit' => ['::update'],
+    ];
+
+    // Add a delete button that handles delete record from DB.
+    $form['actions']['delete'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Delete'),
+      '#submit' => ['::delete'],
     ];
 
     return $form;
-  }
-
-  public function getFormId() {
-    return 'my_first_pets_owners_form';
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -178,6 +199,15 @@ class PetsOwnersForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  //function for delete record
+  public function delete(array &$form, FormStateInterface $form_state){
+    $form_state->setRedirectUrl(Url::fromRoute('pets_owners_storage.delete_confirm', ['id' => $form_state->get('id')]));
+  }
+
+  //function for update data
+  public function update(array &$form, FormStateInterface $form_state){
     $values = $form_state->getValues();
     $parents = $form_state->getValue('parents');
     $f_name = $parents['f_name'];
@@ -189,27 +219,56 @@ class PetsOwnersForm extends FormBase {
     else $somepets2 ='';
     $genders = $form_state->getValue('gender');
     $gender = $genders['active'];
-
-    // Message where submitted.
-    $this->messenger()->addMessage($this->t('Thank you'));
-
-    //Insert data into our schema pets_owners_storage.
-    $entry =
-      [
-        'name' => $values['name'],
-        'prefix' => $values['prefix'],
+    $id = $form_state->get('id');
+    //update fields in DB
+    $query = \Drupal::database();
+    $query->update('pets_owners_storage')
+      ->fields([
+        'name' => $form_state->getValue('name'),
+        'prefix' => $form_state->getValue('prefix'),
         'gender' => $gender,
-        'age' => $values['age'],
+        'age' => $form_state->getValue('age'),
         'fathersname' => $f_name,
         'mothersname' => $m_name,
         'somepets1' => $somepets1,
         'somepets2' => $somepets2,
-        'email' => $values['email'],
-      ];
-    $connection = \Drupal::database();
-    $connection->insert('pets_owners_storage')->fields($entry)->execute();
+        'email' => $form_state->getValue('email'),
+      ])
+      ->condition('id', $id)
+      ->execute();
+    $text = $this->t('The value changed!');
+    \Drupal::messenger()->addMessage($text);
+    $form_state->setRedirect('pets_owners_storage.main');
   }
 
+  /*
+   * select record from BD
+   */
+  public function select($id) {
+    $query = \Drupal::database();
+    $select = $query->select('pets_owners_storage', 'p')
+      ->fields('p', [
+        'id',
+        'prefix',
+        'name',
+        'gender',
+        'age',
+        'fathersname',
+        'mothersname',
+        'somepets1',
+        'somepets2',
+        'email',
+      ])->condition('id', $id)
+      ->execute()->fetchAssoc();
+
+    if ($select != false) {
+      return $select;
+    }
+    else {
+      // page no found - 404
+      throw new NotFoundHttpException();
+    }
+  }
   /**
    * Callback for both ajax-enabled buttons.
    * Selects and returns the fieldset with the names in it.
@@ -220,7 +279,6 @@ class PetsOwnersForm extends FormBase {
 
   /**
    * Submit handler for the "add-one-more" button.
-   *
    * Increments the max counter and causes a rebuild.
    */
   public function addOne(array &$form, FormStateInterface $form_state) {
@@ -235,7 +293,6 @@ class PetsOwnersForm extends FormBase {
 
   /**
    * Submit handler for the "remove one" button.
-   *
    * Decrements the max counter and causes a form rebuild.
    */
   public function removeCallback(array &$form, FormStateInterface $form_state) {

@@ -206,7 +206,7 @@ class PetsOwnersStorageRepository {
    * @see Drupal\Core\Database\Connection::select()
    */
   public function load(array $entry = []) {
-    // Read all the fields from the dbtng_example table.
+    // Read all the fields from the pets_owners_storage table.
     $select = $this->connection
       ->select('pets_owners_storage')
       // Add all the fields into our select query.

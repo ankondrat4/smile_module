@@ -7,8 +7,6 @@ use Drupal\pets_owners_storage\PetsOwnersStorageRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 
 /**
  * Controller for pets_owners_storage.
@@ -23,7 +21,7 @@ class PetsOwnersStorageController extends ControllerBase {
   protected $repository;
 
   /**
-   * create DB}
+   * create DB
    */
   public static function create(ContainerInterface $container) {
     $controller = new static($container->get('pets_owners_storage.repository'));
@@ -34,7 +32,7 @@ class PetsOwnersStorageController extends ControllerBase {
   /**
    * Construct a new controller.
    *
-   * @param \Drupal\dbtng_example\DbtngExampleRepository $repository
+   * @param \Drupal\pets_owners_storage\PetsOwnersStorageRepository $repository
    *   The repository service.
    */
   public function __construct(PetsOwnersStorageRepository $repository) {
@@ -47,9 +45,14 @@ class PetsOwnersStorageController extends ControllerBase {
   public function entryList() {
     $content = [];
     $content['message'] = [
-      '#markup' => $this->t('List of all entries in the database from module pets-owners-form.'),
+      '#markup' => $this->t('List of all entries in the database from submitted '),
     ];
-
+    // Render link.
+    $content['link'] = [
+      '#title' => $this->t('Pets Owners Form'),
+      '#type' => 'link',
+      '#url' => Url::fromRoute('pets_owners_form.main'),
+    ];
     $rows = [];
     $headers = [
       $this->t('Id'),
@@ -65,17 +68,10 @@ class PetsOwnersStorageController extends ControllerBase {
       $this->t('Delete'),
       $this->t('Edit'),
     ];
-
     $entries = $this->repository->load();
-
-    $options = array(
-      'class' => 'use-ajax',
-      'data-dialog-type' => 'modal',
-      'data-dialog-options' => '{"width":700, "dialogClass":"ui-dialog--example"}',
-    );
     foreach ($entries as $value) {
       //$delete = Url::fromUserInput('/pets_owners_storage/delete/'.$value->id);
-      $edit = Url::fromUserInput('/pets_owners_form'.$value->id);
+      $edit = Url::fromUserInput('/pets_owners_storage/edit/'.$value->id);
       $id = $value->id;
       $rows[] = [
         $value->id,
@@ -88,7 +84,6 @@ class PetsOwnersStorageController extends ControllerBase {
         $value->somepets1,
         $value->somepets2,
         $value->email,
-        //'Delete'=>$this->t('<a href="/pets_owners_storage/modal_form_delete/" class="use-ajax" data-dialog-type="modal"}>Delete</a>'),
         'Delete'=>$this->t('<a href="/pets_owners_storage/modal_form_delete/'.$id.'" class="use-ajax" data-dialog-type="modal"}>Delete</a>'),
         //'Delete'=>Link::fromTextAndUrl('Delete', $delete),
         'Edit'=>Link::fromTextAndUrl('Edit', $edit)];
