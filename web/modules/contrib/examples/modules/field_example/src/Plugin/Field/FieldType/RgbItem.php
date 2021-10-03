@@ -28,8 +28,7 @@ class RgbItem extends FieldItemBase {
       'columns' => [
         'value' => [
           'type' => 'text',
-          'size' => 'tiny',
-          'not null' => FALSE,
+          'size' => 'medium',
         ],
       ],
     ];

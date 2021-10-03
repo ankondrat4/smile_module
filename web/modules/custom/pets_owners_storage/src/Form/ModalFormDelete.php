@@ -5,6 +5,7 @@ namespace Drupal\pets_owners_storage\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -130,7 +131,7 @@ class ModalFormDelete extends FormBase {
       $command = new CloseModalDialogCommand();
       $response->addCommand($command);
       $url = Url::fromRoute('pets_owners_storage.main')->toString();
-      $response->addCommand(new \Drupal\Core\Ajax\RedirectCommand($url));
+      $response->addCommand(new RedirectCommand($url));
     }
     return $response;
   }

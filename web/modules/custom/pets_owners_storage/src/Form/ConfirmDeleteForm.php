@@ -18,11 +18,17 @@ class ConfirmDeleteForm extends ConfirmFormBase {
    */
   protected $id;
 
+  /*
+   * @inheritdoc
+   */
   public function buildForm(array $form, FormStateInterface $form_state, string $id = NULL) {
     $this->id = $id;
     return parent::buildForm($form, $form_state);
   }
 
+  /*
+   * @inheritdoc
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->delete($this->id);
     $form_state->setRedirect('pets_owners_storage.main');
@@ -30,14 +36,23 @@ class ConfirmDeleteForm extends ConfirmFormBase {
     \Drupal::messenger()->addMessage($text);
   }
 
+  /*
+   * @inheritdoc
+   */
   public function getFormId() : string {
     return "confirm_delete_form";
   }
 
+  /*
+   * @inheritdoc
+   */
   public function getCancelUrl() {
     return new Url('pets_owners_storage.edit', ['id' => $this->id]);
   }
 
+  /*
+   * @inheritdoc
+   */
   public function getQuestion() {
     return $this->t('Do you want to delete record -> %id?', ['%id' => $this->id]);
   }
