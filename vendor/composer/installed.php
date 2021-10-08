@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'acb5ead59a49208c2e4e78b638184522785b87cf',
+        'reference' => '382a37aacf4d77fd9bc95720d7cd328788e45c29',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -17,6 +17,15 @@
             'install_path' => __DIR__ . '/../asm89/stack-cors',
             'aliases' => array(),
             'reference' => 'b9c31def6a83f84b4d4a40d35996d375755f0e08',
+            'dev_requirement' => false,
+        ),
+        'bower-asset/photoswipe' => array(
+            'pretty_version' => '4.1.1',
+            'version' => '4.1.1.0',
+            'type' => 'drupal-library',
+            'install_path' => __DIR__ . '/../../web/libraries/photoswipe',
+            'aliases' => array(),
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'chi-teck/drupal-code-generator' => array(
@@ -604,6 +613,15 @@
             'reference' => '4.1.1',
             'dev_requirement' => false,
         ),
+        'drupal/drupal_slider' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/drupal_slider',
+            'aliases' => array(),
+            'reference' => '8.x-2.0',
+            'dev_requirement' => false,
+        ),
         'drupal/dynamic_page_cache' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -696,6 +714,15 @@
             'replaced' => array(
                 0 => '9.2.6',
             ),
+        ),
+        'drupal/image_slider' => array(
+            'pretty_version' => '1.3.0',
+            'version' => '1.3.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/image_slider',
+            'aliases' => array(),
+            'reference' => '8.x-1.3',
+            'dev_requirement' => false,
         ),
         'drupal/inline_form_errors' => array(
             'dev_requirement' => false,
@@ -838,6 +865,15 @@
             'reference' => '8.x-1.8',
             'dev_requirement' => false,
         ),
+        'drupal/photoswipe' => array(
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/photoswipe',
+            'aliases' => array(),
+            'reference' => '3.0.0',
+            'dev_requirement' => false,
+        ),
         'drupal/quickedit' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -856,7 +892,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'acb5ead59a49208c2e4e78b638184522785b87cf',
+            'reference' => '382a37aacf4d77fd9bc95720d7cd328788e45c29',
             'dev_requirement' => false,
         ),
         'drupal/redirect' => array(
@@ -1002,6 +1038,15 @@
             'replaced' => array(
                 0 => '9.2.6',
             ),
+        ),
+        'drupal/views_slideshow' => array(
+            'pretty_version' => '4.8.0',
+            'version' => '4.8.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/views_slideshow',
+            'aliases' => array(),
+            'reference' => '8.x-4.8',
+            'dev_requirement' => false,
         ),
         'drupal/views_ui' => array(
             'dev_requirement' => false,
