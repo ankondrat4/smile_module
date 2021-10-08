@@ -2,4 +2,4 @@
 
 views.filter.sex:
   type: 'views.filter.in_operator'
-  label: 'Types'
+  label: 'Sex'
