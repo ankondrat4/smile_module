@@ -92,9 +92,10 @@
       <path value="$PROJECT_DIR$/vendor/consolidation/site-process" />
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/consolidation/filter-via-dot-access-data" />
+      <path value="$PROJECT_DIR$/web" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3">
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
 </project>

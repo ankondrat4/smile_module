@@ -2,7 +2,7 @@
  * Generic elements.
  */
 
-@import "./variables.pcss.css";
+@import "variables.pcss.css";
 
 html {
   font-family: var(--font-family);

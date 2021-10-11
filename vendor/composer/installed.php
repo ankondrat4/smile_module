@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '382a37aacf4d77fd9bc95720d7cd328788e45c29',
+        'reference' => '993d20fe66daad4f444c497947fa5630c2006380',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -254,6 +254,15 @@
             'install_path' => __DIR__ . '/../../web/modules/contrib/admin_toolbar',
             'aliases' => array(),
             'reference' => '3.0.3',
+            'dev_requirement' => false,
+        ),
+        'drupal/adminimal_theme' => array(
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
+            'type' => 'drupal-theme',
+            'install_path' => __DIR__ . '/../../web/themes/contrib/adminimal_theme',
+            'aliases' => array(),
+            'reference' => '8.x-1.6',
             'dev_requirement' => false,
         ),
         'drupal/advagg' => array(
@@ -892,7 +901,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '382a37aacf4d77fd9bc95720d7cd328788e45c29',
+            'reference' => '993d20fe66daad4f444c497947fa5630c2006380',
             'dev_requirement' => false,
         ),
         'drupal/redirect' => array(
@@ -1038,6 +1047,15 @@
             'replaced' => array(
                 0 => '9.2.6',
             ),
+        ),
+        'drupal/views_bulk_operations' => array(
+            'pretty_version' => '4.0.0',
+            'version' => '4.0.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/views_bulk_operations',
+            'aliases' => array(),
+            'reference' => '4.0.0',
+            'dev_requirement' => false,
         ),
         'drupal/views_slideshow' => array(
             'pretty_version' => '4.8.0',

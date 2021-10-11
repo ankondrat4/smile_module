@@ -1,0 +1,13 @@
+global-styling:
+  css:
+    component:
+      css/style.css: {}
+
+maintenance_page:
+  version: VERSION
+  css:
+    theme:
+      css/maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+    - bartik/global-styling

@@ -16,21 +16,24 @@ class SexType extends InOperator {
    */
 
   public function getValueOptions() {
-    // Array keys are used to compare with the table field values.
+    if (isset($this->valueOptions)) {
+      return $this->valueOptions;
+    }
+
+    $this->valueOptions = [
+      'mr' => $this-> t ('Man'),
+      'mrs|ms' => $this-> t ('Woman'),
+    ];
+    // Array keys are used to compare with the table field values Sex.
+    /*
+     * if group by Views UI
     $this->valueOptions = [
       'mr' => 'mr',
       'mrs' => 'mrs',
       'ms' => 'ms',
     ];
-    return $this->valueOptions;
-  }
-
-
- /* public function getValueOptions() {
-    if (!isset($this->valueOptions)) {
-      $this->valueOptions = _get_sex_types();
-    }
-    return $this->valueOptions;
-  }
 */
+    return $this->valueOptions;
+  }
+
 }
