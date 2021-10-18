@@ -1,0 +1,20 @@
+global-styling:
+  css:
+    component:
+      css/style.css: {}
+
+global-scripts:
+  js:
+    /libraries/jcf/js/jcf.js: {}
+    /libraries/jcf/js/jcf.select.js: {}
+    /libraries/jcf/js/jcf.radio.js: {}
+    /libraries/jcf/js/jcf.checkbox.js: {}
+
+maintenance_page:
+  version: VERSION
+  css:
+    theme:
+      css/maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+    - bartik/global-styling

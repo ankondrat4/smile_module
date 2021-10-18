@@ -1,0 +1,42 @@
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+
+]
+%}
+{#{{ attach_library('services_block/table') }}#}
+<article class = "article_border">
+  <div>
+    <div>{{ content.field_main_image }}</div><br>
+  </div>
+
+  {{ title_prefix }}
+  {% if label and not page %}
+    <h1 class="margin_padding" {{ title_attributes.addClass('node__title') }}>
+      <strong>
+        {{ label|render|striptags|upper }}
+      </strong>
+    </h1>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div>
+    <div >{{ content.field_term }}</div><br>
+  </div>
+
+  <div class="margin_padding" {{ content_attributes.addClass('node__content', 'clearfix') }}>
+    {% set summary = content.body|render|striptags %}
+    {{ summary|length > 100 ? summary|slice(0, 250) ~ '...' : summary }}
+  </div>
+
+  <div>
+    <div><a class="btn_view"  href="{{ url }}" rel="bookmark">View content</a></div>
+  </div>
+
+  {#  </div>#}
+</article>

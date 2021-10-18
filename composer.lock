@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af23f5eabf3689c3372ebbeecb427b48",
+    "content-hash": "0acc346a9aae87aa830bdc756dcc810d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -118,6 +118,15 @@
                 "source": "https://github.com/Chi-teck/drupal-code-generator/tree/1.33.1"
             },
             "time": "2020-12-05T05:59:11+00:00"
+        },
+        {
+            "name": "components/jcf",
+            "version": "1.2.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/w3co/jcf/archive/refs/tags/v1.2.3.zip"
+            },
+            "type": "drupal-library"
         },
         {
             "name": "composer/installers",

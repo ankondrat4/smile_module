@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '993d20fe66daad4f444c497947fa5630c2006380',
+        'reference' => '0fef871bb5c6f31618469a4f427b15d869850bba',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -35,6 +35,15 @@
             'install_path' => __DIR__ . '/../chi-teck/drupal-code-generator',
             'aliases' => array(),
             'reference' => '5f814e980b6f9cf1ca8c74cc9385c3d81090d388',
+            'dev_requirement' => false,
+        ),
+        'components/jcf' => array(
+            'pretty_version' => '1.2.3',
+            'version' => '1.2.3.0',
+            'type' => 'drupal-library',
+            'install_path' => __DIR__ . '/../../web/libraries/jcf',
+            'aliases' => array(),
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'composer/installers' => array(
@@ -901,7 +910,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '993d20fe66daad4f444c497947fa5630c2006380',
+            'reference' => '0fef871bb5c6f31618469a4f427b15d869850bba',
             'dev_requirement' => false,
         ),
         'drupal/redirect' => array(
