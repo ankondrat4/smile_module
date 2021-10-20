@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\smile_test\ContactInterface;
+use Drupal\smile_test\SmileTestInterface;
 use Drupal\user\UserInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 
@@ -82,12 +82,12 @@ use Drupal\Core\Entity\EntityChangedTrait;
  *   label = @Translation("Smile test entity"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\smile_test\Entity\Controller\ContactListBuilder",
+ *     "list_builder" = "Drupal\smile_test\Entity\Controller\SmileTestListBuilder",
  *     "form" = {
- *       "default" = "Drupal\smile_test\Form\ContactForm",
- *       "delete" = "Drupal\smile_test\Form\ContactDeleteForm",
+ *       "default" = "Drupal\smile_test\Form\SmileTestForm",
+ *       "delete" = "Drupal\smile_test\Form\SmileTestDeleteForm",
  *     },
- *     "access" = "Drupal\smile_test\ContactAccessControlHandler",
+ *     "access" = "Drupal\smile_test\SmileTestAccessControlHandler",
  *   },
  *   list_cache_contexts = { "user" },
  *   base_table = "smile_test",
@@ -102,7 +102,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
  *     "delete-form" = "/contact/{smile_test}/delete",
  *     "collection" = "/smile_test/list"
  *   },
- *   field_ui_base_route = "smile_test.contact_settings",
+ *   field_ui_base_route = "smile_test.smile_test_settings",
  * )
  *
  * The 'links' above are defined by their path. For core to find the
@@ -134,7 +134,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
  * The class also uses the EntityChangedTrait trait which allows it to record
  * timestamps of save operations.
  */
-class SmileTest extends ContentEntityBase implements ContactInterface {
+class SmileTest extends ContentEntityBase implements SmileTestInterface {
 
   use EntityChangedTrait;
 
