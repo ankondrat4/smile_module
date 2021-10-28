@@ -1,5 +1,4 @@
 <?php
-use Drupal\Core\Render\Markup;
 /**
  * @file
  * Main file for hooks and custom functions.

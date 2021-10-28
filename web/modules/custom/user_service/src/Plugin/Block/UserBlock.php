@@ -2,7 +2,6 @@
 namespace Drupal\user_service\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\user_service\UserMessage;
 
 /**
  * Class User Service Block.
@@ -27,7 +26,12 @@ class UserBlock extends BlockBase {
       '#theme' => 'user_service_theme',
       '#list' => $list,
       '#attached'=>[
-        'library'=>['user_service/block'],
+        'library'=>['user_service/style']
+      ],
+      '#cache' =>[
+        'max-age' => -1,
+        'tags' => ['node_list'],
+        'contexts' => ['user.roles'],
       ],
     ];
   }
@@ -35,8 +39,8 @@ class UserBlock extends BlockBase {
   /**
    * @return int
    */
-  public function getCacheMaxAge(): int {
+  /*public function getCacheMaxAge(): int {
     return 0;
-  }
+  }*/
 
 }
