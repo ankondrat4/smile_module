@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Contains Drupal\batch_queue.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_cron() for unpublish all nodes.
+ */
+function batch_queue_cron(){
+  $queue = \Drupal::queue('UnpublishNodeQueue');
+  $nids = \Drupal::entityQuery('node')
+    //->condition('type', 'service')    //if want for type=service etc.
+    ->condition('status', '1')
+    ->execute();
+  foreach ($nids as $nid) {
+    $queue->createItem($nid);
+  }
+}
+
+
+function batch_queue_node_insert(EntityInterface $node) {
+  $user = User::load($node->getOwnerId());
+  $user_roles = $user->getRoles();
+  if (in_array('administrator', $user_roles)) {
+    $queue = \Drupal::queue('NotifiedNewNodeQueue');
+    $queue->createItem([
+      'author' => $node->getOwner(),
+      'nid`' => $node->nid,
+      'title' => $node->title,
+    ]);
+  }
+}

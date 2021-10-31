@@ -29,7 +29,6 @@ class UserBlock extends BlockBase {
         'library'=>['user_service/style']
       ],
       '#cache' =>[
-        'max-age' => -1,
         'tags' => ['node_list'],
         'contexts' => ['user.roles'],
       ],

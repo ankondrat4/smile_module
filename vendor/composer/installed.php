@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0fef871bb5c6f31618469a4f427b15d869850bba',
+        'reference' => '5b36b004da5ee8f2d98676108601aea5f7f84639',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -910,7 +910,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0fef871bb5c6f31618469a4f427b15d869850bba',
+            'reference' => '5b36b004da5ee8f2d98676108601aea5f7f84639',
             'dev_requirement' => false,
         ),
         'drupal/redirect' => array(
@@ -1038,6 +1038,15 @@
             'replaced' => array(
                 0 => '9.2.6',
             ),
+        ),
+        'drupal/ultimate_cron' => array(
+            'pretty_version' => '2.0.0-alpha5',
+            'version' => '2.0.0.0-alpha5',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/ultimate_cron',
+            'aliases' => array(),
+            'reference' => '8.x-2.0-alpha5',
+            'dev_requirement' => false,
         ),
         'drupal/update' => array(
             'dev_requirement' => false,

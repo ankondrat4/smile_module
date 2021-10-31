@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\smile_test\smile_test.module.
+ * Contains Drupal\smile_test\batch_queue.module.
  */
 
 /**

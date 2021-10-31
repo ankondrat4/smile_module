@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Implements update hook-1 that will fill your custom entity type with dummy
+ * data (create N new entities with data during update execution).
+ */
+function batch_queue_update_9001(&$sandbox){
+  $connection = \Drupal::service('database');
+  $mass = [
+    [
+      'uuid' => uniqid(),
+      'client_name' => 'Andrey',
+      'prefered_brand' => 'puma',
+      'products_owned_count' => 10,
+      'registration_date' => '2021-10-21',
+      'langcode' => 'und',
+      'created' => time(),
+      'changed' => time()
+    ],
+    [
+      'uuid' => uniqid(),
+      'client_name' => 'Oleg',
+      'prefered_brand' => 'nike',
+      'products_owned_count' => 4,
+      'registration_date' => '2021-10-20',
+      'langcode' => 'und',
+      'created' => time(),
+      'changed' => time()
+    ],
+    [
+      'uuid' => uniqid(),
+      'client_name' => 'Ira',
+      'prefered_brand' => 'adidas',
+      'products_owned_count' => 7,
+      'registration_date' => '2021-10-11',
+      'langcode' => 'und',
+      'created' => time(),
+      'changed' => time()
+    ],
+    [
+      'uuid' => uniqid(),
+      'client_name' => 'Mark',
+      'prefered_brand' => 'nike',
+      'products_owned_count' => 2,
+      'registration_date' => '2021-10-09',
+      'langcode' => 'und',
+      'created' => time(),
+      'changed' => time()
+    ],
+  ];
+  foreach ($mass as $mas) {
+    $result = $connection->insert('smile_test')
+      ->fields(['uuid','client_name', 'prefered_brand', 'products_owned_count','registration_date','langcode'])
+      ->values([
+        'uuid' => $mas['uuid'],
+        'client_name' => $mas['client_name'],
+        'prefered_brand' => $mas['prefered_brand'],
+        'products_owned_count' => $mas['products_owned_count'],
+        'registration_date' => $mas['registration_date'],
+        'langcode' => $mas['langcode'],
+      ])
+      ->execute();
+  }
+
+  return t('Updated and added 10 new entities!');
+}
+
+/**
+ * implement update hook-1  that will set a current date for every
+ * “registration_date” value if the value is more than 10 days.
+ *//*
+function smile_test_update_9017(){
+  $connection = \Drupal::service('database');
+  $date10 = date_sub(new Datetime('NOW'), date_interval_create_from_date_string("10 days"));
+  $date10 = $date10 -> format('Y-m-d');
+  $result = $connection->update('smile_test')
+    ->fields([
+      'registration_date' => date('Y-m-d'),
+    ])
+    ->condition('registration_date',$date10,'<')
+    ->execute();
+
+  return t("Updated records witch registration_date 10 days ago! $date10");
+}
+*/
+/**
+ * implement update hook-3 using batch functionality (dividing into data
+ * to update into chunks with $sandbox variable usage).
+ *//*
+function batch_queue_update_9002(&$sandbox){
+  /*$date10 = date_sub(new Datetime('NOW'), date_interval_create_from_date_string("10 days"));
+  $date10 = $date10 -> format('Y-m-d');*/
+  /*$connection = \Drupal::database();
+
+  if (!isset($sandbox['total'])) {
+    /*$nodes = $connection->select('node_field_data')
+      ->fields(['nid'])
+      ->condition('type','article','=')
+      ->execute();*/
+    /*$count_nodes = $connection->query("SELECT count(*) FROM node_field_data WHERE type = 'article'");
+    $result = $connection->query("SELECT nid FROM node_field_data WHERE type = 'article'");
+    $nids = $result->fetchAll();
+    $sandbox['total'] = $count_nodes;
+    $sandbox['current'] = 0;
+  }
+
+  $nodes_per_batch = 1;
+
+  /*
+  $nodes = \Drupal::entityQuery('smile_test')
+    ->condition('registration_date',$date10,'<')
+    ->range($sandbox['current'], $sandbox['current'] + $nodes_per_batch)
+    ->execute();
+  */
+
+  // Get a node storage object.
+  /*$node_storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  // Load a single node.
+  //$node_storage->load($nid);
+
+  // Load multiple nodes.
+  //$node_storage->loadMultiple($nodes);
+
+  foreach($nids as $nid) {
+    $node = $node_storage->load($nid);
+    echo "Title = ".$node->title->getValue();
+    //$node->title = $node->title->getValue().random_int(1,100);
+    //$node->title = $node->title->getValue();
+    //$node_object->title->value = $node_object->title->getValue();
+    $node->save();
+    $sandbox['current']++;
+  }
+/*
+  foreach($nodes as $nid) {
+    $node = SmileTest::load($nid);
+    $node->registration_date->value = time('Y-m-d');
+    $node->save();
+    $sandbox['current']++;
+  }
+*/
+  /*if ($sandbox['total'] == 0) {
+    $sandbox['#finished'] = 1;
+  } else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+
+  return t('Updated all title of nodes, added random number from 1 to 100 to the end!');
+}
+*/
+
+function batch_queue_update_9008(&$sandbox){
+  if (!isset($sandbox['total'])) {
+    $nids = \Drupal::entityQuery('node')
+      //->condition('type', 'service')    //if want for type=service etc.
+      ->execute();
+    $sandbox['total'] = count($nids);
+    $sandbox['current'] = 0;
+  }
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  foreach ($nids as $nid) {
+    $node = $node_storage->load($nid);
+    $node->title = $node->get('title')->value . random_int(1, 100);
+    $node->save();
+    $sandbox['current']++;
+  }
+  if ($sandbox['total'] == 0) {
+    $sandbox['#finished'] = 1;
+  } else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+  return t('Updated all title of all nodes, added random number from 1 to 100 to the end!');
+}

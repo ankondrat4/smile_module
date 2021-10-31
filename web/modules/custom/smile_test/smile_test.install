@@ -70,7 +70,7 @@ function smile_test_update_9007(&$sandbox){
  * implement update hook-1  that will set a current date for every
  * “registration_date” value if the value is more than 10 days.
  */
-function smile_test_update_9017(){
+function smile_test_update_9016(){
   $connection = \Drupal::service('database');
   $date10 = date_sub(new Datetime('NOW'), date_interval_create_from_date_string("10 days"));
   $date10 = $date10 -> format('Y-m-d');
@@ -88,7 +88,7 @@ function smile_test_update_9017(){
  * implement update hook-3 using batch functionality (dividing into data
  * to update into chunks with $sandbox variable usage).
  */
-function smile_test_update_9018(&$sandbox){
+function smile_test_update_9017(&$sandbox){
   $date10 = date_sub(new Datetime('NOW'), date_interval_create_from_date_string("10 days"));
   $date10 = $date10 -> format('Y-m-d');
   if (!isset($sandbox['total'])) {
