@@ -26,7 +26,7 @@ class UnpublishNodeQueue extends QueueWorkerBase {
       $node_storage = \Drupal::entityTypeManager()->getStorage('node');
       if ($node = $node_storage->load($data)) {
         if ($node->isPublished()) {
-          $node->setUnpublished(TRUE);
+          $node->setUnpublished();
           //$node->setPublished(TRUE);
           $node->save();
           $this->messenger()->addMessage(
