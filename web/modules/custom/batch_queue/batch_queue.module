@@ -22,16 +22,18 @@ function batch_queue_cron(){
   }
 }
 
-
+/**
+ * Implements hook_node_insert() for queue where user from admin role create node.
+ */
 function batch_queue_node_insert(EntityInterface $node) {
   $user = User::load($node->getOwnerId());
   $user_roles = $user->getRoles();
   if (in_array('administrator', $user_roles)) {
     $queue = \Drupal::queue('NotifiedNewNodeQueue');
     $queue->createItem([
-      'author' => $node->getOwner(),
-      'nid`' => $node->nid,
-      'title' => $node->title,
+      'author' => $user->getDisplayName(),
+      'nid' => $node->id(),
+      'title' => $node->label(),
     ]);
   }
 }
