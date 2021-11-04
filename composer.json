@@ -55,6 +55,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/photoswipe": "^3.0",
         "drupal/redirect": "^1.6",
+        "drupal/restui": "^1.20",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/views_bulk_operations": "^4.0",
         "drupal/views_slideshow": "^4.8",

@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '5b36b004da5ee8f2d98676108601aea5f7f84639',
+        'reference' => 'a53990ca8a7250a72228ced78cf8c583ab83a176',
         'name' => 'drupal/recommended-project',
         'dev' => true,
     ),
@@ -910,7 +910,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '5b36b004da5ee8f2d98676108601aea5f7f84639',
+            'reference' => 'a53990ca8a7250a72228ced78cf8c583ab83a176',
             'dev_requirement' => false,
         ),
         'drupal/redirect' => array(
@@ -933,6 +933,15 @@
             'replaced' => array(
                 0 => '9.2.6',
             ),
+        ),
+        'drupal/restui' => array(
+            'pretty_version' => '1.20.0',
+            'version' => '1.20.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/restui',
+            'aliases' => array(),
+            'reference' => '8.x-1.20',
+            'dev_requirement' => false,
         ),
         'drupal/search' => array(
             'dev_requirement' => false,
