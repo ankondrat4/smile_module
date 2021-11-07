@@ -27,7 +27,7 @@ class UnpublishNodeQueue extends QueueWorkerBase {
       if ($node = $node_storage->load($data)) {
         if ($node->isPublished()) {
           $node->setUnpublished();
-          //$node->setPublished(TRUE);
+          //$node->setPublished();
           $node->save();
           $this->messenger()->addMessage(
             $this->t('Unpublish nid: @node', [

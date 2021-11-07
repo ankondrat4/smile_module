@@ -5,3 +5,10 @@ batch_queue.main:
     _title: 'Batch form for logs'
   requirements:
     _permission: 'access content'
+batch_queue.config_cron:
+  path: '/config_cron'
+  defaults:
+    _form:  '\Drupal\batch_queue\Form\ConfigCronForm'
+    _title: 'Form for config cron UnpublishNodeQueue'
+  requirements:
+    _permission: 'access content'
