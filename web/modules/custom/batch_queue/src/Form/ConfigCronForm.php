@@ -72,8 +72,6 @@ class ConfigCronForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $name = $form_state->getValue('name');
-    $email = $form_state->getValue('email');
     if ($form_state->getValue('period') < 180) {
       $form_state->setErrorByName('period', $this->t('Minimum value is 180.'));
     }

@@ -6,7 +6,7 @@ batch_queue.main:
   requirements:
     _permission: 'access content'
 batch_queue.config_cron:
-  path: '/config_cron'
+  path: '/admin/config/system/config_cron'
   defaults:
     _form:  '\Drupal\batch_queue\Form\ConfigCronForm'
     _title: 'Form for config cron UnpublishNodeQueue'
