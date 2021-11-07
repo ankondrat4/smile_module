@@ -22,6 +22,21 @@ class UnpublishNodeQueue extends QueueWorkerBase {
    * {@inheritdoc}
    */
   public function processItem($data) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    if (!empty($data) && $node_storage->load($data) && $node_storage->load($data)->isPublished()) {
+      $node_storage->load($data)
+        ->setUnpublished()
+        ->save();
+      $this->messenger()->addMessage(
+        $this->t('Unpublish nid: @node', [
+          '@node' => $data,
+        ])
+      );
+    }
+  }
+
+  /*
+  public function processItem($data) {
     if (!empty($data)) {
       $node_storage = \Drupal::entityTypeManager()->getStorage('node');
       if ($node = $node_storage->load($data)) {
@@ -37,8 +52,6 @@ class UnpublishNodeQueue extends QueueWorkerBase {
         }
       }
     }
-  }
-
-
+  }*/
 
 }

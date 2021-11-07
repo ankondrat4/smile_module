@@ -45,12 +45,12 @@ class ConfigCronForm extends ConfigFormBase {
       '#default_value' => $site_config->get('items'),
     ];
 
-    $form['disabled']['active'] = [
+    $form['disabled'] = [
       '#type' => 'radios',
       '#title' => $this->t('Disabled (define if on cron run we should
       find nodes or just postpone any actions until user will enable it again)'),
-      '#options' => ['true' => $this->t('Yes'), 'false' => $this->t('No')],
-      '#default_value' => $site_config->get('disabled'),
+      '#options' => ['Yes' => $this->t('Yes'), 'No' => $this->t('No')],
+      '#default_value' => $site_config->get('disabled') == 0 ? 'No' : 'Yes',
     ];
 
     $form['unpublished_label'] = [
@@ -90,9 +90,9 @@ class ConfigCronForm extends ConfigFormBase {
     $site_config = \Drupal::configFactory()->getEditable('batch_queue.resource');
     $site_config -> set('period',  $form_state->getValue('period'))
       -> set('items',  $form_state->getValue('items'))
-      -> set('unpublished_label',  $form_state->getValue('unpublished_label'));
-    $status = $form_state->getValue('disabled');
-    $site_config -> set('disabled',  $status['active']);
+      -> set('disabled', $form_state->getValue('disabled') == 'Yes' ? 1 : 0)
+      -> set('unpublished_label',  $form_state->getValue('unpublished_label'))
+      -> save();
 
     parent::submitForm($form, $form_state);
   }

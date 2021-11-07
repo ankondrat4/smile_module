@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
 
 /**
  * Implements hook_cron() for unpublish all nodes.
- */
+
 function batch_queue_cron(){
   $queue = \Drupal::queue('UnpublishNodeQueue');
   $nids = \Drupal::entityQuery('node')
@@ -19,6 +19,33 @@ function batch_queue_cron(){
     ->execute();
   foreach ($nids as $nid) {
     $queue->createItem($nid);
+  }
+}*/
+
+/**
+ * Implements hook_cron() for unpublish nodes from config.
+ */
+function batch_queue_cron(){
+  $site_config = \Drupal::config('batch_queue.resource');
+  if($site_config->get('disabled') == 0) {
+    $limit = $site_config->get('items');
+    $period = time() - $site_config->get('period');
+
+    $nids = \Drupal::entityQuery('node')
+      //->condition('type', 'service')    //if want for type=service etc.
+      ->condition('status', '1')
+      ->condition('changed', $period, '<')
+      ->range(0, $limit)
+      ->execute();
+
+    $queue = \Drupal::queue('UnpublishNodeQueue');
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    foreach ($nids as $nid) {
+      $node = $node_storage->load($nid);
+      $node->set('title', $node->get('title')->value ." - ". $site_config->get('unpublished_label'));
+      $node->save();
+      $queue->createItem($nid);
+    }
   }
 }
 

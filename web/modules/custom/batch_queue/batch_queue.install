@@ -11,7 +11,7 @@ function batch_queue_update_9008(&$sandbox){
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   foreach ($nids as $nid) {
     $node = $node_storage->load($nid);
-    $node->title = $node->get('title')->value . random_int(1, 100);
+    $node->set('title', $node->get('title')->value . random_int(1, 100));
     $node->save();
     $sandbox['current']++;
   }
