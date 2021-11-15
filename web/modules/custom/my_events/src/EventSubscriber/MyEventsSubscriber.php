@@ -60,7 +60,7 @@ class MyEventsSubscriber implements EventSubscriberInterface{
       if ($this->route->getRouteName() == 'user.pass') {
         return;
       }
-      $event->setResponse(new RedirectResponse('/user/login', 301));
+      $event->setResponse(new RedirectResponse('/user/login', 302));
     }
   }
 

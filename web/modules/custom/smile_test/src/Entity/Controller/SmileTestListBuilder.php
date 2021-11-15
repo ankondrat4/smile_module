@@ -87,7 +87,7 @@ class SmileTestListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\smile_test\Entity\SmileTest */
+    /* @var $entity \Drupal\smile_test\Entity\SmileEntity */
     $row['id'] = $entity->id();
     $row['client_name'] = $entity->client_name->value;
     $row['prefered_brand'] = $entity->prefered_brand->value;

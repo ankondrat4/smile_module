@@ -38,7 +38,7 @@
  *
  * Where ever possible, we use the amazing tools built into D8 natively.
  *
- * @see Drupal\smile_test\Entity\SmileTest
+ * @see Drupal\smile_test\Entity\SmileEntity
  * @see config_entity_example
  * }
  */

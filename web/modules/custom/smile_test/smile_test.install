@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\smile_test\Entity\SmileTest;
+use Drupal\smile_test\Entity\SmileEntity;
 /**
  * Implements update hook-1 that will fill your custom entity type with dummy
  * data (create N new entities with data during update execution).
@@ -107,7 +107,7 @@ function smile_test_update_9017(&$sandbox){
     ->execute();
 
   foreach($nids as $nid) {
-    $node = SmileTest::load($nid);
+    $node = SmileEntity::load($nid);
     $node->registration_date->value = time('Y-m-d');
     $node->save();
     $sandbox['current']++;

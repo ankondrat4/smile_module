@@ -17,7 +17,7 @@ class SmileTestForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\smile_test\Entity\SmileTest */
+    /* @var $entity \Drupal\smile_test\Entity\SmileEntity */
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
 

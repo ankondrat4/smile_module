@@ -1,0 +1,10 @@
+{% if content %}
+  <div{{ attributes.addClass('entity_div') }}>
+    <p>
+      {% trans %}<b>Title:</b> {{ label }}{% endtrans %}
+    </p>
+    <p>
+      {% trans %}<b>Body:</b> {{ body }}{% endtrans %}
+    </p>
+  </div>
+{% endif %}
