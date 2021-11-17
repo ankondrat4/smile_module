@@ -19,23 +19,30 @@ class SmileEntityAccessControlHandler extends EntityAccessControlHandler {
    * $operation as defined in the routing.yml file.
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    // Check the admin_permission as defined in your @ContentEntityType
-    // annotation.
-    $admin_permission = $this->entityType->getAdminPermission();
-    if ($account->hasPermission($admin_permission)) {
-      return AccessResult::allowed();
-    }
-    switch ($operation) {
-      case 'view':
-        return AccessResult::allowedIfHasPermission($account, 'view smile_entity entity');
 
-      case 'update':
-        return AccessResult::allowedIfHasPermission($account, 'edit smile_entity entity');
+    $user_role = $entity->get('role')->value;
+    $current_roles = $account->getRoles();
+    if (in_array($user_role, $current_roles)) {
+      // Check the admin_permission as defined in your @ContentEntityType
+      // annotation.
+      $admin_permission = $this->entityType->getAdminPermission();
+      if ($account->hasPermission($admin_permission)) {
+        return AccessResult::allowed();
+      }
+      switch ($operation) {
+        case 'view':
+          return AccessResult::allowedIfHasPermission($account, 'view smile_entity entity');
 
-      case 'delete':
-        return AccessResult::allowedIfHasPermission($account, 'delete smile_entity entity');
+        case 'update':
+          return AccessResult::allowedIfHasPermission($account, 'edit smile_entity entity');
+
+        case 'delete':
+          return AccessResult::allowedIfHasPermission($account, 'delete smile_entity entity');
+      }
+      return AccessResult::neutral();
     }
-    return AccessResult::neutral();
+    return AccessResult::forbidden("You don't have access to this page");
+
   }
 
   /**
