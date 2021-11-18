@@ -77,4 +77,6 @@ function template_preprocess_smile_entity(&$variables) {
   $variables['label'] = $entity->label();
   //provide the body
   $variables['body'] = $entity->get('body')->value;
+  //provide the url
+  $variables['url'] = $entity->toUrl()->toString();
 }
