@@ -10,22 +10,26 @@ use Drupal\Core\Form\FormStateInterface;
  *   admin_label = @Translation("Smile Entity Block")
  *)
  */
+
 class EntityBlock extends BlockBase {
 
   public function build() {
     $config = $this->getConfiguration();
-
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
     $query = \Drupal::entityQuery('smile_entity');
-    $entity_ids = $query->sort('created', 'DESC')
+    $entity_ids = $query->condition('role', $roles, 'IN')
+      ->sort('created', 'DESC')
       ->range(0, $config['items'])
       ->execute();
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_view_builder = $entity_type_manager->getViewBuilder('smile_entity');
+    $smile_entities = $entity_type_manager->getStorage('smile_entity')->loadMultiple($entity_ids);
 
-    foreach ($entity_ids as $id) {
-      $node = $entity_type_manager->getStorage('smile_entity')->load($id);
-      $list['entity'][$node->id()] = $entity_view_builder->view($node, 'teaser');
+    $list = [];
+    foreach ($smile_entities as $entity) {
+      $list['entity'][$entity->id()] = $entity_view_builder->view($entity, 'teaser');
     }
 
     return [
@@ -34,14 +38,11 @@ class EntityBlock extends BlockBase {
       '#attached'=>[
         'library'=>['smile_entity_block/table']
       ],
+      '#cache' => [
+        'tags' => ['smile_entity_list'],
+        'contexts' => ['user.roles'],
+      ],
     ];
-  }
-
-  /**
-   *   Cache age life time. Disable block cache.
-   */
-  public function getCacheMaxAge() {
-    return 0;
   }
 
 
@@ -54,7 +55,7 @@ class EntityBlock extends BlockBase {
 
     $form['items_count'] = [
       '#type' => 'number',
-      '#title' => $this->t('Count of entitiesg:'),
+      '#title' => $this->t('Count of entities:'),
       '#default_value' => $config['items'] ?? '',
     ];
 
